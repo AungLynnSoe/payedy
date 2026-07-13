@@ -1,3 +1,4 @@
+
 # Payedu
 ### Payedu は、コース・学生・支払いを一元管理する
 Next.js + Firebase ベースの Web アプリケーションです。
@@ -104,5 +105,4 @@ npm run dev
 👉https://pay-edu-vast.vercel.app/
 
 
-
-# 練習用です
+#
