@@ -1,7 +1,23 @@
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { listUsers, updateUserRole, updateUser } from "@/data/users";
+import { logAudit } from "@/lib/audit";
+
+// Only admins/teachers may view or change user records.
+async function requireAdminSession() {
+  const session = await getServerSession(authOptions);
+  const role = session?.user?.role;
+  const isAdmin = session?.user?.isAdmin;
+  if (!session || (!isAdmin && role !== "teacher")) return null;
+  return session;
+}
 
 export async function GET() {
+  const session = await requireAdminSession();
+  if (!session) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+
   // Merge in-memory seed users with DB students
   const dbStudents = await prisma.student.findMany({
     orderBy: { createdAt: "asc" },
@@ -27,6 +43,9 @@ export async function GET() {
 }
 
 export async function POST(req) {
+  const session = await requireAdminSession();
+  if (!session) return NextResponse.json({ error: "forbidden" }, { status: 403 });
+
   const body = await req.json();
   const { studentId, role, courseId, course, name, email } = body;
   if (!studentId) return new Response("Missing studentId", { status: 400 });
@@ -53,6 +72,14 @@ export async function POST(req) {
     }
     updated = { studentId };
   }
+
+  await logAudit({
+    actor: session.user.email || session.user.studentId,
+    actorName: session.user.name,
+    action: "USER_UPDATE",
+    targetType: "User",
+    targetId: studentId,
+  });
 
   return new Response(JSON.stringify(updated), { status: 200 });
 }
