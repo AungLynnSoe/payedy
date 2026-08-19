@@ -6,6 +6,7 @@ import {
   validateUserCredentials,
   isAllowedInstitutionEmail,
 } from "@/data/users";
+import { logAudit } from "@/lib/audit";
 
 export const authOptions = {
   providers: [
@@ -93,6 +94,18 @@ export const authOptions = {
   pages: {
     signIn: "/",
     error: "/auth/error",
+  },
+
+  events: {
+    // Record only admin/teacher logins — student logins are out of scope.
+    async signIn({ user }) {
+      if (user?.role !== "teacher") return;
+      await logAudit({
+        actor: user.email || user.studentId || user.id,
+        actorName: user.name,
+        action: "LOGIN",
+      });
+    },
   },
 };
 
