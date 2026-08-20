@@ -12,6 +12,7 @@ model Student {
   email        String    @unique
   name         String    @default("")
   nameKana     String    @default("")
+  role         String    @default("student")
   courseId     String    @default("")
   courseKey    String    @default("")
   courseDocId  String?
@@ -95,4 +96,19 @@ model Discount {
   updatedAt DateTime @updatedAt
 
   student Student @relation(fields: [studentId], references: [studentId])
+}
+
+// Records admin/teacher logins and their changes ("who logged in" / "who changed what").
+model AuditLog {
+  id         Int      @id @default(autoincrement())
+  actor      String // session email or studentId of the admin who performed the action
+  actorName  String? // display name at the time of the action, for convenience
+  action     String // e.g. "LOGIN", "USER_UPDATE"
+  targetType String? // e.g. "User" — the kind of thing that was changed
+  targetId   String? // e.g. the studentId that was changed
+  createdAt  DateTime @default(now())
+
+  @@index([actor])
+  @@index([action])
+  @@index([createdAt])
 }
