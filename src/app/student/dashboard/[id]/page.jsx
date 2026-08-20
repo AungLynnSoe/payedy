@@ -359,19 +359,19 @@ export default function StudentDashboardIdPage() {
                       const statusLabel = p.verified ? "承認済み" : p.status === "却下" ? "却下" : "確認中";
                       return (
                         <tr key={pid}>
-                          <td>
+                          <td data-label="日付">
                             <div className={styles.dateCell}>
                               <span>{date.toLocaleDateString("ja-JP")}</span>
                               <span className={styles.timeText}>{date.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" })}</span>
                             </div>
                           </td>
-                          <td className={styles.amountCell}>¥{Number(p.amount).toLocaleString()}</td>
-                          <td>{p.paymentMethod || "-"}</td>
-                          <td>
+                          <td className={styles.amountCell} data-label="金額">¥{Number(p.amount).toLocaleString()}</td>
+                          <td data-label="方法">{p.paymentMethod || "-"}</td>
+                          <td data-label="状態">
                             <span className={`${styles.statusBadge} ${statusCls}`}>{statusLabel}</span>
                             {p.rejectReason && <div className={styles.rejectReason}>{p.rejectReason}</div>}
                           </td>
-                          <td>
+                          <td data-label="領収書">
                             <div className={styles.paymentAction}>
                               {p.receiptBase64
                                 ? <img src={p.receiptBase64} alt="receipt" className={receiptStyles.thumb} onClick={() => setLightboxSrc(p.receiptBase64)} />
