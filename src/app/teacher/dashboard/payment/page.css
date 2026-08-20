@@ -85,7 +85,7 @@
 .courseSelect:focus { outline: none; border-color: #2563EB; }
 
 /* ─── Bar chart ─── */
-.chartScroll { overflow-x: hidden; }
+.chartScroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
 .bars {
   --chart-height: 180px;
@@ -170,11 +170,11 @@
 /* ─── Responsive ─── */
 @media (max-width: 640px) {
   .paymentPage { padding: 16px 14px; }
-  .bars { --chart-height: 150px; --gap: 6px; }
+  .bars { --chart-height: 150px; --gap: 6px; min-width: 480px; }
   .bar { width: min(18px, 55%); }
   .barMonth, .barCapValue, .barTooltip { font-size: 10.5px; }
 }
 @media (max-width: 420px) {
-  .bars { --chart-height: 130px; --gap: 4px; }
+  .bars { --chart-height: 130px; --gap: 4px; min-width: 420px; }
   .bar { width: min(14px, 50%); }
 }

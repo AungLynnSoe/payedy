@@ -177,10 +177,14 @@
 }
 
 /* ==== Payment table ==== */
+.tableWrap {
+  overflow-x: auto;
+  margin-top: 16px;
+}
+
 .paymentTable {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 16px;
 }
 
 .paymentTable th {
@@ -781,4 +785,15 @@
   .editActions { flex-wrap: wrap; }
 
   .courseNameSpan { font-size: 14px; }
+
+  /* ==== Payment table: keep column layout, scroll to reveal actions ==== */
+  .tableWrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+  }
+  .paymentTable { min-width: 560px; }
+  .paymentTable th, .paymentTable td { padding: 9px 8px; font-size: 13px; }
+  .paymentAction { flex-wrap: nowrap; }
 }
